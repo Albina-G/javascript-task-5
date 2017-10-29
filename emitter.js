@@ -28,6 +28,7 @@ function getEmitter() {
          * @param {String} event
          * @param {Object} context
          * @param {Function} handler
+         * @returns {Object}
          */
         on: function (event, context, handler) {
             // console.info(event, context, handler);
@@ -46,10 +47,11 @@ function getEmitter() {
          * Отписаться от события
          * @param {String} event
          * @param {Object} context
+         * @returns {Object}
          */
         off: function (event, context) {
             // console.info(event, context);
-            if(event.indexOf('.') === -1) {
+            if (event.indexOf('.') === -1) {
                 let masEvent = event.split('.');
                 let masKey = Object.keys(events);
                 masKey.forEach(function (key) {
@@ -66,6 +68,7 @@ function getEmitter() {
         /**
          * Уведомить о событии
          * @param {String} event
+         * @returns {Object}
          */
         emit: function (event) {
             // console.info(event);
@@ -73,7 +76,7 @@ function getEmitter() {
             let masEvents = [event];
             if (splitEvent.length !== 1) {
                 masEvents.push(splitEvent[0]);
-            } 
+            }
             masEvents.forEach(function (item) {
                 if (events[item] !== undefined) {
                     doEmit(item);
@@ -92,7 +95,7 @@ function getEmitter() {
          * @param {Number} times – сколько раз получить уведомление
          */
         several: function (event, context, handler, times) {
-            // console.info(event, context, handler, times);
+            console.info(event, context, handler, times);
         },
 
         /**
@@ -104,14 +107,14 @@ function getEmitter() {
          * @param {Number} frequency – как часто уведомлять
          */
         through: function (event, context, handler, frequency) {
-            // console.info(event, context, handler, frequency);
+            console.info(event, context, handler, frequency);
         }
     };
 }
 
 function deleteEvent(key, context) {
     events[key] = events[key].filter(function (item) {
-        
+
         return item.context !== context;
     });
 }

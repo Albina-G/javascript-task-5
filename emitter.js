@@ -51,16 +51,12 @@ function getEmitter() {
          */
         off: function (event, context) {
             // console.info(event, context);
-            if (event.indexOf('.') === -1) {
-                let masEvent = event.split('.');
-                let masKey = Object.keys(events);
-                masKey.forEach(function (key) {
-                    if (key === masEvent || key.indexOf(masEvent[0] + '.') !== -1) {
-                        deleteEvent(key, context);
-                    }
-                });
-            }
-            deleteEvent(event, context);
+            let masKey = Object.keys(events);
+            masKey.forEach(function (key) {
+                if (key === event || key.indexOf(event + '.') !== -1) {
+                    deleteEvent(key, context);
+                }
+            });
 
             return this;
         },

@@ -78,8 +78,7 @@ function getEmitter() {
 
                 return partsEvent.slice(1, partsEvent.length);
             });
-            for (let i = splitEvent.length - 1; i >= 0; i--)
-            {
+            for (let i = splitEvent.length - 1; i >= 0; i--) {
                 if (events[splitEvent[i]] !== undefined) {
                     doEmit(splitEvent[i]);
                 }

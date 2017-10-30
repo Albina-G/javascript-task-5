@@ -72,16 +72,18 @@ function getEmitter() {
          */
         emit: function (event) {
             // console.info(event);
-            let splitEvent = event.split('.');
-            let masEvents = [event];
-            if (splitEvent.length !== 1) {
-                masEvents.push(splitEvent[0]);
-            }
-            masEvents.forEach(function (item) {
-                if (events[item] !== undefined) {
-                    doEmit(item);
-                }
+            let partsEvent = '';
+            let splitEvent = event.split('.').map(function (item) {
+                partsEvent += '.' + item;
+
+                return partsEvent.slice(1, partsEvent.length);
             });
+            for (let i = splitEvent.length - 1; i >= 0; i--)
+            {
+                if (events[splitEvent[i]] !== undefined) {
+                    doEmit(splitEvent[i]);
+                }
+            }
 
             return this;
         },

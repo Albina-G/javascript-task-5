@@ -53,7 +53,7 @@ function getEmitter() {
             // console.info(event, context);
             let masKey = Object.keys(events);
             masKey.forEach(function (key) {
-                if (key === event || key.indexOf(event + '.') !== -1) {
+                if (key === event || key.indexOf(event + '.') === 0) {
                     deleteEvent(key, context);
                 }
             });
@@ -70,9 +70,9 @@ function getEmitter() {
             // console.info(event);
             let partsEvent = '';
             let splitEvent = event.split('.').map(function (item) {
-                partsEvent += '.' + item;
+                partsEvent += item + '.';
 
-                return partsEvent.slice(1, partsEvent.length);
+                return partsEvent.slice(0, -1);
             });
             for (let i = splitEvent.length - 1; i >= 0; i--) {
                 if (events[splitEvent[i]] !== undefined) {
@@ -118,6 +118,6 @@ function deleteEvent(key, context) {
 
 function doEmit(event) {
     events[event].forEach(function (item) {
-        item.handler.call(item.context);
+        item.handler.call(item.context, item);
     });
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * неСделано задание на звездочку
+ * Сделано задание на звездочку
  * Реализованы методы several и through
  */
 getEmitter.isStar = true;
@@ -88,16 +88,20 @@ function getEmitter() {
          * @param {Object} context
          * @param {Function} handler
          * @param {Number} times – сколько раз получить уведомление
+         * @returns {Object}
          */
         several: function (event, context, handler, times) {
-            //console.info(event, context, handler, times);
+            // console.info(event, context, handler, times);
             if (times <= 0) {
 
                 return this.on(event, context, handler);
             }
             let iteration = 0;
 
-            return this.on(event, context, function() {
+            /**
+            * @this {Object}
+            */
+            return this.on(event, context, function () {
                 iteration++;
                 handler.call(this);
                 if (iteration === times) {
@@ -113,9 +117,10 @@ function getEmitter() {
          * @param {Object} context
          * @param {Function} handler
          * @param {Number} frequency – как часто уведомлять
+         * @returns {Object}
          */
         through: function (event, context, handler, frequency) {
-            //console.info(event, context, handler, frequency);
+            // console.info(event, context, handler, frequency);
             if (frequency <= 0) {
 
                 return this.on(event, context, handler);
@@ -123,6 +128,9 @@ function getEmitter() {
 
             let iteration = 0;
 
+            /**
+            * @this {Object}
+            */
             return this.on(event, context, function () {
                 if (iteration === 0) {
                     handler.call(this);

@@ -4,22 +4,20 @@
  * неСделано задание на звездочку
  * Реализованы методы several и through
  */
-getEmitter.isStar = false;
+getEmitter.isStar = true;
 module.exports = getEmitter;
 
-let formEvent = {
+const formEvent = {
     context: undefined,
     handler: undefined
 };
-
-let events = {};
 
 /**
  * Возвращает новый emitter
  * @returns {Object}
  */
 function getEmitter() {
-    events = {};
+    var events = {};
 
     return {
 
@@ -54,7 +52,7 @@ function getEmitter() {
             let masKey = Object.keys(events);
             masKey.forEach(function (key) {
                 if (key === event || key.indexOf(event + '.') === 0) {
-                    deleteEvent(key, context);
+                    events = deleteEvent(key, context, events);
                 }
             });
 
@@ -76,7 +74,7 @@ function getEmitter() {
             });
             for (let i = splitEvent.length - 1; i >= 0; i--) {
                 if (events[splitEvent[i]] !== undefined) {
-                    doEmit(splitEvent[i]);
+                    events = doEmit(splitEvent[i], events);
                 }
             }
 
@@ -92,7 +90,20 @@ function getEmitter() {
          * @param {Number} times – сколько раз получить уведомление
          */
         several: function (event, context, handler, times) {
-            console.info(event, context, handler, times);
+            //console.info(event, context, handler, times);
+            if (times <= 0) {
+
+                return this.on(event, context, handler);
+            }
+            let iteration = 0;
+
+            return this.on(event, context, function() {
+                iteration++;
+                handler.call(this);
+                if (iteration === times) {
+                    events = deleteEvent(event, context, events);
+                }
+            });
         },
 
         /**
@@ -104,20 +115,40 @@ function getEmitter() {
          * @param {Number} frequency – как часто уведомлять
          */
         through: function (event, context, handler, frequency) {
-            console.info(event, context, handler, frequency);
+            //console.info(event, context, handler, frequency);
+            if (frequency <= 0) {
+
+                return this.on(event, context, handler);
+            }
+
+            let iteration = 0;
+
+            return this.on(event, context, function () {
+                if (iteration === 0) {
+                    handler.call(this);
+                }
+                iteration++;
+                if (iteration === frequency) {
+                    iteration = 0;
+                }
+            });
         }
     };
 }
 
-function deleteEvent(key, context) {
+function deleteEvent(key, context, events) {
     events[key] = events[key].filter(function (item) {
 
         return item.context !== context;
     });
+
+    return events;
 }
 
-function doEmit(event) {
+function doEmit(event, events) {
     events[event].forEach(function (item) {
         item.handler.call(item.context, item);
     });
+
+    return events;
 }

@@ -98,12 +98,9 @@ function getEmitter() {
             }
             let iteration = 0;
 
-            /**
-            * @this {Object}
-            */
             return this.on(event, context, function () {
                 iteration++;
-                handler.call(this);
+                handler.call(context);
                 if (iteration === times) {
                     events = deleteEvent(event, context, events);
                 }
@@ -128,12 +125,9 @@ function getEmitter() {
 
             let iteration = 0;
 
-            /**
-            * @this {Object}
-            */
             return this.on(event, context, function () {
                 if (iteration === 0) {
-                    handler.call(this);
+                    handler.call(context);
                 }
                 iteration++;
                 if (iteration === frequency) {
